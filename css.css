@@ -1,0 +1,274 @@
+body{
+    background-color: ivory;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px; 
+  }
+  
+  .container img {
+    max-width: 100%; 
+    max-height: 100%;
+    margin: auto; 
+  }
+  
+  h1{
+    color: rgb(147, 94, 33);
+    background-color: rgb(255, 240, 214);
+    text-align: center;
+    padding: 20px;
+  }
+
+  #todoUL {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .completed {
+    text-decoration: line-through;
+  }
+
+#updateTodo{
+  display: none;
+}
+
+
+  body {
+    margin: 0;
+    background: #eaedf1;
+    font-family: 'Lato', sans-serif;
+  }
+  .header {
+    background: white;
+    padding: 30px;
+    text-align: center;
+  }
+  .header h1 {
+    font-weight: 300;
+    display: inline;
+  }
+  h2 {
+    color: #89867e;
+
+  }
+  .color {
+    width: 350px;
+    margin: 0 auto;
+  }
+  .color li {
+    margin: 0 15px 0 0;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    border-radius: 100%;
+  }
+  .color .red    {background: #fa5a5a;}
+  .color .yellow {background: #f0d264;}
+  .color .green  {background: #82c8a0;}
+  .color .cyan   {background: #7fccde;}
+  .color .blue   {background: #6698cb;}
+  .color .purple {background: #cb99c5;}
+  
+  .content, 
+  .content-gradient, 
+  .content-3d {
+    margin: 40px auto;
+  }
+  .content {
+    width: 80%;
+    max-width: 700px;
+  }
+  .content-3d {
+    width: 50%;
+    max-width: 300px;
+  }
+  pre {
+    width: 100%;
+    padding: 30px;
+    background-color: rgba(0, 0, 0, 0.72);
+    color: #f8f8f2;
+    border-radius: 0 0 4px 4px;
+    margin-top: 20px;
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+  }
+  pre .bt  {color: #f8f8f2;} /* <> */
+  pre .anc {color: #f92672;} /* anchor tag */
+  pre .att {color: #a6a926;} /* attribute */
+  pre .val {color: #e6db74;} /* value */
+  
+
+
+    .button {
+      background-color: #F0D264; 
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 14px;
+      margin: 4px 2px;
+      cursor: pointer;
+      transition-duration: 0.4s;
+      border-radius: 12px;
+  }
+
+  .button:hover {
+    background-color: #f5e7b3; /* Green */
+    color: rgb(108, 54, 18);
+}
+
+.btn {
+  background-color: #F0D264; 
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  margin: 4px 2px;
+  cursor: pointer;
+  transition-duration: 0.4s;
+  border-radius: 12px;
+
+}
+
+.btn:hover {
+background-color: #f5e7b3; 
+color: rgb(108, 54, 18);
+}
+
+#todoUL span {
+  margin-right: 50px;
+}
+
+#loginForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#joinForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.signUpBtn{
+  display: block;
+  
+}
+
+
+
+div {
+  display: flex;
+  align-items: center;
+}
+
+.btn {
+  margin-top: 20px;
+}
+
+.button {
+  background-color: #F0D264; 
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+  transition-duration: 0.4s;
+  border-radius: 12px;
+}
+
+.button:hover {
+background-color: #f5e7b3; /* Green */
+color: rgb(108, 54, 18);
+}
+
+button {
+background-color: #F0D264; 
+border: none;
+color: white;
+padding: 15px 32px;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 12px;
+margin: 4px 2px;
+cursor: pointer;
+transition-duration: 0.4s;
+border-radius: 12px;
+
+}
+
+button:hover {
+background-color: #f5e7b3; /* Green */
+color: rgb(108, 54, 18);
+}
+
+
+
+table{
+  border: 1px;
+
+}
+
+#joinForm div{
+padding-top: 20px;
+padding-bottom: 20px;
+}
+
+#idDubleCheck {
+  display: none;
+  background-color: #82c8a0;
+}
+
+#todoForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#todoForm label {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#todoForm input[type="text"] {
+  text-align: center;
+  width: 300px;
+  height: 30px;
+  margin-bottom: 10px;
+}
+
+
+#todoUL {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  text-align: center;
+}
+
+#notice{
+  font-size: 8px;
+}

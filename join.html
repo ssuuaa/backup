@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+    <link rel="stylesheet" href="css.css" type="text/css"> 
+</head>
+<body>
+    
+    <h1>회원가입</h1>
+    <form id="joinForm">
+        <div>
+        <span id="id">아이디&nbsp;</span>
+       
+        <input type="text" id="idInput" maxlength="10"><br><span id="idDubleCheck"></span>&nbsp;<span id="idCheck2"></span>
+       
+       
+        
+    
+    </div> 
+    <div id="notice">아이디는 5~20자의 영소문자와 숫자를 입력해주세요.</div>
+    
+        <div>
+        <span id="pwd">비밀번호&nbsp;</span>
+        
+        <input type="password" id="pwdInput"><br><span id="pwdCheck1"></span>
+       
+    </div>
+    <div id="notice">비밀번호는 8~16자 영문 대,소문자, 숫자, 특수문자($@$!%*?&-_)를 입력해주세요.</div>
+
+        <div>
+        <span id="pwd">비밀번호 확인&nbsp;</span>
+        <input type="password" id="pwdInputConfirm"><br><span id="pwdCheck2"></span>
+    </div>
+
+        <div>
+        <span id="address">주소&nbsp;</span>
+        <input type="address" id="addressInput"><br><span id="addrCheck"></span>
+    </div>
+        
+        <div>
+        <span id="email">이메일&nbsp;</span>
+        <input type="email" id="emailInput"><br><span id="emailCheck"></span>
+    </div>
+        
+        <div class="signUpBtn">
+        <input type="button" class="btn" value="가입하기" onclick="newSignUp()">
+    </div>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+//1은 있는 아이디, 0은 없는 아이디
+
+$(document).ready(function () {
+    
+
+
+   
+
+        let userID = $("#idInput").val();
+        let userIDForm = $("#idInput");
+
+        let userPwd = $("#pwdInput").val();
+        let userPwdForm = $("#pwdInput");
+
+        let userPwdConfirm = $("#pwdInputConfirm").val();
+        let userPwdConfirmForm = $("#pwdInputConfirm");
+
+        let userAddress = $("#addressInput").val();
+        let userEmail = $("#emailInput").val();
+
+
+    
+        console.log(userID)
+
+    
+
+
+
+        // 아이디 입력칸에 포커스가 사라지면
+        $("#idInput").blur(function(){
+            let userID = $("#idInput").val();
+            
+
+             // 정규표현식 추가
+             /*
+                (?=.*[a-z]): 최소한 하나의 영문자가 반드시 포함
+                (?=.*\d): 최소한 하나의 숫자가 반드시 포함
+                [a-z\d]{5,20}: 영문자와 숫자가 모두 포함된 5~20자의 문자
+             */
+             let idRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{5,20}$/;
+
+            // 만약 정규표현식을 만족하지 않으면
+            if (!idRegex.test(userID)) {
+
+                       $("#idCheck2").text("5~20자의 영소문자와 숫자로 입력해주세요.");
+                       $("#idCheck2").css("color", "#F65D5D")
+               
+            }
+            // 만약 정규표현식을 만족하면
+            else if(idRegex.test(userID)){
+                    $("#idCheck2").text("올바른 아이디 형식입니다.");
+                    $("#idCheck2").css("color", "#50956E")
+                    
+            }
+
+            // 아이디 중복체크하는 ajax
+            $.ajax({
+                url: "http://newdreams.kr/BootcampusService.asmx/RegisterCheck"
+                , type: "POST"
+                , data: {
+                    "id": userID  
+                }
+                , dataType: "json"
+                , success: function(result) { 
+                    // 아이디가 중복된다면
+                    if(result=="1"){
+                      
+                        // 중복O 라는 문구 보여주고, 아래 입력칸을 막기
+                        $("#idDubleCheck").css("display", "inline-block")
+                        $("#idDubleCheck").css("background-color", "#FF8989")
+                        $("#idDubleCheck").text("중복O")
+
+                        $("#idInput").val("");
+                        $("#pwdInput").prop('disabled', true);
+                        $("#pwdInputConfirm").prop('disabled', true);
+                        $("#addressInput").prop('disabled', true);
+                        $("#emailInput").prop('disabled', true);
+                
+                    }
+
+                    // 아이디가 중복되지 않는다면(가입이 가능하면)
+                    else if(result=="0"){
+                        // 중복X라는 문구 보여주고 입력 가능하게 하기
+                        $("#idDubleCheck").text("중복X")
+                        $("#idDubleCheck").css("background-color", "#82c8a0")
+                        $("#idDubleCheck").css("display", "inline-block")
+                        
+
+                       $("#pwdInput").prop('disabled', false);
+                        $("#pwdInputConfirm").prop('disabled', false);
+                        $("#addressInput").prop('disabled', false);
+                        $("#emailInput").prop('disabled', false);
+                        
+                 }
+
+                }
+                , error: function(xhr, status, error) {
+                    alert("아이디 확인 불가");
+                    console.log(xhr, status, error);
+                }
+            });
+        }
+        
+        )
+        
+        // 비밀번호 입력칸에 포커스가 들어오면 아이디 중복여부와 정규표현식 만족칸을 지우기
+        $("#pwdInput").focus(function(){
+            $("#idDubleCheck").css("display","none")
+            $("#idCheck2").text("")
+            
+
+        })
+
+
+
+        // 비밀번호 입력칸에 포커스가 사라지면        
+        $("#pwdInput").blur(function(){
+
+
+
+        // 정규표현식 추가(8~16자 영문 대,소문자, 숫자, 특수문자 $@$!%*?&-_)
+        /*
+        (?=.*[a-z]): 최소한 하나의 소문자가 반드시 포함
+        (?=.*[A-Z]): 최소한 하나의 대문자가 반드시 포함
+        (?=.*\d): 최소한 하나의 숫자가 반드시 포함
+        (?=.*[$@$!%*?&-_]): 최소한 하나의 특수문자($@$!%*?&-_)가 반드시 포함
+        */
+        let passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&-_])[A-Za-z\d$@$!%*?&-_]{8,16}$/;
+        let userPwd = $("#pwdInput").val();
+
+                // 만약 정규표현식을 만족하지 않으면
+                if (!passwordRegex.test(userPwd)) {
+                    $("#pwdCheck1").text("비밀번호는 8~16자 영문 대,소문자, 숫자, 특수문자($@$!%*?&-_)를 사용해야 합니다.")
+                    $("#pwdCheck1").css("color", "#F65D5D")
+                    $("#pwdInput").val("");
+                    
+                }
+                // 만약 정규표현식을 만족한다면
+                else if(passwordRegex.test(userPwd)){
+                    $("#pwdCheck1").text("올바른 비밀번호 형식입니다.");
+                    $("#pwdCheck1").css("color", "#50956E")
+                }
+
+        })
+        
+        // 비밀번호 확인 칸에 포커스가 들어오면
+        $("#pwdInputConfirm").focus(function(){
+            // 문구 삭제하기
+            $("#pwdCheck1").text("")
+        })
+
+
+        // 비밀번호 확인에 포커스가 사라지면
+        $("#pwdInputConfirm").blur(function(){
+            let userPwd = $("#pwdInput").val();
+            let userPwdConfirm = $("#pwdInputConfirm").val();
+
+                // 비밀번호와 비밀번호확인칸이 빈칸이 아니면
+                if(userPwd!=null && userPwdConfirm!=null){
+                
+                // 비밀번호와 비밀번호확인에 입력한 값이 일치하면
+                if(userPwd===userPwdConfirm){
+                    $("#pwdCheck2").text("비밀번호가 일치합니다.")
+                    $("#pwdCheck2").css("color", "#50956E")
+                    
+                }
+                // 일치하지 않으면
+                else{                    
+                    $("#pwdCheck2").text("비밀번호가 일치하지 않습니다.")
+                    $("#pwdCheck2").css("color", "#F65D5D")
+                    $("#pwdInputConfirm").val("");
+                    $("#pwdInputConfirm").focus()
+                    
+                    
+                }
+            }
+            })
+
+
+            // 주소칸에 포커스가 들어오면
+            $("#addressInput").focus(function(){
+                // 비밀번호 일치 문구 삭제
+                $("#pwdCheck2").text("")
+            })
+            
+
+            // 주소칸에 포커스가 사라지면 
+            $("#addressInput").blur(function(){
+            let userAddress = $("#addressInput").val();
+
+            // 주소 정규표현식
+            /*
+            [가-힣]+는 한글 유니코드 범위에 속하는 한글 글자가 하나 이상 있음
+            \d{3}-\d{3}는 "000-000"과 같은 형식의 전화번호
+            (?:[가-힣]+로\s\d+길\s\d+(?:-[0-9]+)?)(?:,\s?[가-힣]+(?:\s[가-힣]+)?)*는 도로명주소
+            \s는 공백 문자
+            \d{1,4}는 1자리부터 4자리까지의 숫자
+            -[1-4]는 "-" 뒤에 1~4 중 하나의 숫자가 있는 것
+            ?는 앞의 패턴이 없거나 한 번만 나타날 수 있음       
+            */
+            let addressRegex = /^(?:[가-힣]+|\d{3}-\d{3}|(?:[가-힣]+로\s\d+길\s\d+(?:-[0-9]+)?)(?:,\s?[가-힣]+(?:\s[가-힣]+)?)*)(?:\s\d{1,4}(?:-[1-4])?)?$/
+
+            
+            // 정규 표현식을 만족하지 않으면
+            if(!addressRegex.test(userAddress)){
+                $("#addrCheck").text("올바른 주소가 아닙니다.");
+                $("#addrCheck").css("color", "#F65D5D")
+                $("#addressInput").val("");
+                $("#addressInput").focus();
+            }
+
+
+            // 정규표현식을 만족하면
+            else if(addressRegex.test(userAddress)){
+                $("#addrCheck").text("올바른 주소입니다.");
+                $("#addrCheck").css("color", "#50956E")
+            }
+            });
+
+
+
+            // 이메일 입력칸에 포커스가 들어오면
+            $("#emailInput").focus(function(){
+                // 주소 확인 문구 삭제
+                $("#addrCheck").text("")
+            })
+
+            // 이메일 입력칸에 포커스가 사라지면
+            $("#emailInput").blur(function() {
+            let userEmail = $("#emailInput").val();
+            let emailCheck = $("#emailCheck");
+            
+            let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (!emailRegex.test(userEmail)) {
+                $("#emailCheck").text("올바른 이메일 형식이 아닙니다.")
+                $("#emailCheck").css("color", "#F65D5D")
+                $("#emailInput").val("");
+            } 
+            else if(emailRegex.test(userEmail)) {
+                $("#emailCheck").text("올바른 이메일 형식입니다.")
+                $("#emailCheck").css("color", "#50956E")
+                
+            }
+            });
+
+   newSignUp = () => {
+            $("#emailCheck").text("")
+            let userID = $("#idInput").val();
+            let userPwd = $("#pwdInput").val();
+            let userPwdConfirm = $("#pwdInputConfirm").val();
+            let userAddress = $("#addressInput").val();
+            let userEmail = $("#emailInput").val();
+
+        // 모든 칸이 입력되었을 때
+         if(userID!=""
+                &&userPwd!=""
+                &&userPwdConfirm!=""
+                &&userAddress!=""
+                &&userEmail!=""){
+           
+            // 회원가입하는 ajax
+          $.ajax({
+                url: "http://newdreams.kr/BootcampusService.asmx/Register"
+                , type: "POST"
+                , data: {
+                    "id": userID
+                    ,"password": userPwd
+                    ,"address": userAddress
+                    ,"email": userEmail
+                }
+                , dataType: "json"
+                , success: function(result) { 
+                
+                    if(result==true){
+                        let sessionValue = sessionStorage.setItem("id", userID)
+                        console.log(sessionValue);
+                        alert("회원가입에 성공했습니다.");
+                        newSignUpClose()
+                        
+                    }
+                    else{
+                       alert("회원가입에 실패했습니다.")
+                 }
+
+                }
+                , error: function(xhr, status, error) {
+                    alert("서버 오류입니다.");
+                    console.log(xhr, status, error);
+                }
+            });
+         }
+         // 아이디칸이 비어있으면
+         else if(userID==""){
+            alert("아이디를 입력해주세요.")
+            $("#idInput").focus();
+         }
+
+         // 비밀번호칸이 비어있으면
+         else if(userPwd==""){
+            alert("비밀번호를 입력해주세요.")
+            $("#pwdInput").focus();
+         }
+
+         // 비밀번호 확인칸이 비어있으면 
+         else if(userPwdConfirm==""){
+            alert("비밀번호 확인을 해주세요.")
+            $("#pwdInputConfirm").focus();
+         }
+
+         // 주소칸이 비어있으면
+         else if(userAddress==""){
+            alert("주소를 입력해주세요.")
+            $("#addressInput").focus();
+         }
+
+         // 이메일칸이 비어있으면
+         else if(userEmail==""){
+            alert("이메일을 입력해주세요.")
+            $("#emailInput").focus();
+         }
+
+
+          
+        }
+        
+        // 팝업창 닫기
+        newSignUpClose = () =>{
+            //window.close="join.html"
+            parent.close() 
+            window.close() 
+            self.close() 
+        }
+
+        // 엔터키로 회원가입하기
+        $("#emailInput").on("keyup",function(key){
+        if(key.keyCode==13) {
+            //alert("엔터키 이벤트");
+            newSignUp()
+        }
+    });
+
+})
+
+            
+    </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<link rel="stylesheet" href="css.css" type="text/css">
+<body>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script>
+$(document).ready(function () {
+
+
+    // 로그인 버튼 클릭하면 작동하는 함수
+    login = () => {
+
+             // 암호화에 사용할 키 값
+            const secretKey = "Mosti0Soft1";
+
+            // 아이디 입력값
+            let userID = $("#idInput").val();
+            // 비밀번호 입력값
+            let userPwd = $("#pwdInput").val();
+
+
+            // Crypto JS라이브러리를 사용해 암호화
+            let encryptedID = CryptoJS.AES.encrypt(userID, secretKey).toString();
+            let encryptedPwd = CryptoJS.AES.encrypt(userPwd, secretKey).toString();
+            console.log("encryptedID는",encryptedID)
+            console.log("encryptedPwd는",encryptedPwd)
+          
+             // 복호화
+            let decryptedID = CryptoJS.AES.decrypt(encryptedID, secretKey).toString(CryptoJS.enc.Utf8);
+            let decryptedPwd = CryptoJS.AES.decrypt(encryptedPwd, secretKey).toString(CryptoJS.enc.Utf8);
+            console.log("Decrypted ID: " + decryptedID);
+            console.log("Decrypted Password: " + decryptedPwd);
+          
+          
+            // AJAX 통신으로 로그인 정보를 전송
+            $.ajax({
+                url: "http://newdreams.kr/BootcampusService.asmx/Login",
+                type: "get",
+                data: {
+                    // 여기 복호화 된 거 넣음..
+                    "id": decryptedID,
+                    "password": userPwd
+                },
+                dataType: "json",
+                success: function(result) {
+                    console.log(result)
+                    // 서버에서 true가 날아오면
+                    if(result==true){
+                        // 세션에 아이디 넣기 (암호화 한 거)
+                        let sessionValue = sessionStorage.setItem("id", encryptedID)
+                        console.log(sessionValue);
+                        alert("로그인에 성공했습니다.");
+                        //로그인에 성공하면 투두리스트 열기
+                        window.location.href = "todoList.html";
+                    }
+                    // 서버에서 true가 아니면(false라면) 등록된 아이디가 없으니 회원가입을 하라고 하기
+                    else{
+                        alert("로그인에 실패하였습니다.");
+                        $("#idInput").val("");
+                        $("#pwdInput").val("");
+                        $("#idInput").focus();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("서버 오류입니다. 다시 시도해주세요.");
+                    $("#idInput").val("");
+                    $("#pwdInput").val("");
+                    $("#idInput").focus();
+                    console.log(xhr, status, error);
+                }
+            });
+        }
+
+        // 엔터키 눌러서 로그인하기
+        $("#pwdInput").on("keyup",function(key){
+        if(key.keyCode==13) {
+            //alert("엔터키 이벤트");
+            login()
+        }
+    });
+
+    // 회원가입 창 띄우기
+    showSignUp = () => {
+            window.open("join.html","회원가입","width=800, height=700, top=10, left=10");
+        }
+});
+
+       
+    </script>
+<h1>로그인</h1>
+<form id="loginForm">
+    <div>
+    <span id="id">아이디:</span>
+    <input type="text" id="idInput" maxlength="10"><br><br>
+    </div>
+
+    <div>
+    <span id="pwd">비밀번호:</span>
+    <input type="password" id="pwdInput"><br><br>
+    </div>
+    
+    <div>
+    <input type="button" class="btn" value="로그인" onclick="login()">
+    <input type="button" class="btn" value="회원가입" onclick="showSignUp()">
+    </div>
+</form>
+</body>
+</html>
